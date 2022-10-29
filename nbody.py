@@ -23,6 +23,7 @@ def combinations(l):
         ls = l[x + 1:]
         for y in ls:
             result.append((l[x][0], l[x][1], l[x][2], y[0], y[1], y[2]))
+            # print(l[x][0], l[x][1], l[x][2], y[0], y[1], y[2])
     return result
 
 
@@ -74,7 +75,7 @@ PAIRS = tuple(combinations(SYSTEM))
 planets = tuple(BODIES.keys())
 
 
-def advance(dt, n, bodies=SYSTEM, pairs=PAIRS):
+def advance(dt, n, bodies=SYSTEM, pairs=PAIRS, filename="planet_positions"):
     positions = []
     for i in range(n):
         for ([x1, y1, z1], v1, m1, [x2, y2, z2], v2, m2) in pairs:
@@ -97,7 +98,7 @@ def advance(dt, n, bodies=SYSTEM, pairs=PAIRS):
             r[2] += dt * vz
 
             positions.append([planets[planet_no], r[0], r[1], r[2]])
-    write_csv(positions)
+    write_csv(filename, positions)
 
 
 def report_energy(bodies=SYSTEM, pairs=PAIRS, e=0.0):
@@ -122,29 +123,33 @@ def offset_momentum(ref, bodies=SYSTEM, px=0.0, py=0.0, pz=0.0):
     v[2] = pz / m
 
 
-# defining a function for to write csv
-def write_csv(positions):
+def main(n, ref="sun", filename="planet_positions"):
+    offset_momentum(BODIES[ref])
+    report_energy()
+    advance(0.01, n, filename)
+    report_energy()
+
+
+######
+
+
+def write_csv(filename, positions):
     header = ['body', 'position x', 'position y', 'position z']
-    with open('orbits_position.csv', 'w', newline='') as file:
+    with open(f'{filename}.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerow(header)
         writer.writerows(positions)
 
 
-def main(n, ref="sun"):
-    offset_momentum(BODIES[ref])
-    report_energy()
-    advance(0.01, n)
-    report_energy()
-
+####
 
 if __name__ == "__main__":
-    if len(sys.argv) >= 2:
-        main(int(sys.argv[1]))
-        sys.exit(0)
+    if len(sys.argv) >= 3:
+        main(int(sys.argv[1]), filename=sys.argv[2])
         end_time = time.perf_counter()
-        time_taken = end_time - start_time
-        print('time taken for execution: ', time_taken)
+        total_time = end_time - start_time
+        print("time for executing python file: ", total_time)
+        sys.exit(0)
     else:
         print(f"This is {sys.argv[0]}")
         print("Call this program with an integer as program argument")
