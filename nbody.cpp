@@ -14,7 +14,8 @@
 #define _USE_MATH_DEFINES // https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants?view=msvc-160
 #include <cmath>
 #include <iostream>
-
+#include <fstream>
+#include <time.h>
 
 // these values are constant and not allowed to be changed
 const double SOLAR_MASS = 4 * M_PI * M_PI;
