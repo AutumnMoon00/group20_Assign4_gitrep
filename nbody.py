@@ -68,6 +68,7 @@ BODIES = {
 
 SYSTEM = tuple(BODIES.values())
 PAIRS = tuple(combinations(SYSTEM))
+planets = tuple(BODIES.keys())
 
 
 def advance(dt, n, bodies=SYSTEM, pairs=PAIRS):
@@ -92,7 +93,8 @@ def advance(dt, n, bodies=SYSTEM, pairs=PAIRS):
             r[1] += dt * vy
             r[2] += dt * vz
 
-            positions.append(planet_no, r[0], r[1], r[2])
+            positions.append([planets[planet_no], r[0], r[1], r[2]])
+    write_csv(positions)
 
 
 def report_energy(bodies=SYSTEM, pairs=PAIRS, e=0.0):
