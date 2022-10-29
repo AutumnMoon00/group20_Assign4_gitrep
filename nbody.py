@@ -12,6 +12,9 @@
 import sys
 from math import sqrt, pi as PI
 import csv
+import time
+
+start_time = time.perf_counter()
 
 
 def combinations(l):
@@ -139,6 +142,9 @@ if __name__ == "__main__":
     if len(sys.argv) >= 2:
         main(int(sys.argv[1]))
         sys.exit(0)
+        end_time = time.perf_counter()
+        time_taken = end_time - start_time
+        print('time taken for execution: ', time_taken)
     else:
         print(f"This is {sys.argv[0]}")
         print("Call this program with an integer as program argument")
