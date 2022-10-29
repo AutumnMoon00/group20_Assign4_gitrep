@@ -11,12 +11,13 @@
 
 import sys
 from math import sqrt, pi as PI
+import csv
 
 
 def combinations(l):
     result = []
     for x in range(len(l) - 1):
-        ls = l[x + 1 :]
+        ls = l[x + 1:]
         for y in ls:
             result.append((l[x][0], l[x][1], l[x][2], y[0], y[1], y[2]))
     return result
@@ -111,6 +112,15 @@ def offset_momentum(ref, bodies=SYSTEM, px=0.0, py=0.0, pz=0.0):
     v[0] = px / m
     v[1] = py / m
     v[2] = pz / m
+
+
+# defining a function for to write csv
+def write_csv(positions):
+    header = ['body', 'position x', 'position y', 'position z']
+    with open('orbits_position.csv', 'w', newline='') as file:
+        writer = csv.writer(file, delimiter=';')
+        writer.writerow(header)
+        writer.writerows(positions)
 
 
 def main(n, ref="sun"):
