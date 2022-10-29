@@ -75,7 +75,7 @@ PAIRS = tuple(combinations(SYSTEM))
 planets = tuple(BODIES.keys())
 
 
-def advance(dt, n, bodies=SYSTEM, pairs=PAIRS, filename="planet_positions"):
+def advance(dt, n, filename, bodies=SYSTEM, pairs=PAIRS):
     positions = []
     for i in range(n):
         for ([x1, y1, z1], v1, m1, [x2, y2, z2], v2, m2) in pairs:
@@ -92,13 +92,13 @@ def advance(dt, n, bodies=SYSTEM, pairs=PAIRS, filename="planet_positions"):
             v2[2] += dz * b1m
             v2[1] += dy * b1m
             v2[0] += dx * b1m
-        for planet_no, (r, [vx, vy, vz], m) in enumerate(bodies):
+        for planet_num, (r, [vx, vy, vz], m) in enumerate(bodies):
             r[0] += dt * vx
             r[1] += dt * vy
             r[2] += dt * vz
 
-            positions.append([planets[planet_no], r[0], r[1], r[2]])
-    write_csv(filename, positions)
+            positions.append([planets[planet_num], r[0], r[1], r[2]])
+    write_csv(positions, filename)
 
 
 def report_energy(bodies=SYSTEM, pairs=PAIRS, e=0.0):
@@ -123,7 +123,7 @@ def offset_momentum(ref, bodies=SYSTEM, px=0.0, py=0.0, pz=0.0):
     v[2] = pz / m
 
 
-def main(n, ref="sun", filename="planet_positions"):
+def main(n, filename="planet_positions", ref="sun"):
     offset_momentum(BODIES[ref])
     report_energy()
     advance(0.01, n, filename)
@@ -133,7 +133,7 @@ def main(n, ref="sun", filename="planet_positions"):
 ######
 
 
-def write_csv(filename, positions):
+def write_csv(positions, filename):
     header = ['body', 'position x', 'position y', 'position z']
     with open(f'{filename}.csv', 'w', newline='') as file:
         writer = csv.writer(file, delimiter=';')
@@ -144,11 +144,11 @@ def write_csv(filename, positions):
 ####
 
 if __name__ == "__main__":
-    if len(sys.argv) >= 3:
-        main(int(sys.argv[1]), filename=sys.argv[2])
+    if len(sys.argv) >= 2:
+        main(int(sys.argv[1]), sys.argv[2])
         end_time = time.perf_counter()
-        total_time = end_time - start_time
-        print("time for executing python file: ", total_time)
+        time_taken = end_time - start_time
+        print("time taken for execution: ", time_taken)
         sys.exit(0)
     else:
         print(f"This is {sys.argv[0]}")
