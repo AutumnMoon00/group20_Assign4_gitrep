@@ -17,11 +17,20 @@
 #include <fstream>
 #include <time.h>
 
+// start time of the programme
+clock_t start_time = clock();
+
 // these values are constant and not allowed to be changed
 const double SOLAR_MASS = 4 * M_PI * M_PI;
 const double DAYS_PER_YEAR = 365.24;
 const unsigned int BODIES_COUNT = 5;
 
+void write_csv (std::string planet_name, std::string pos_x, std::string pos_y, std::string pos_z) {
+    std::fstream fout;
+    fout.open("planet_positions_cpp.csv", std::ios::app);
+    fout << planet_name << ';' << pos_x << ';' << pos_y << ';' << pos_z << '\n';
+    fout.close();
+}
 
 class vector3d {
 public:
@@ -134,6 +143,9 @@ void advance(body state[BODIES_COUNT], double dt) {
      */
     for (unsigned int i = 0; i < BODIES_COUNT; ++i) {
         state[i].position += state[i].velocity * dt;
+        write_csv(state[i].name, std::to_string(state[i].position.x),
+                  std::to_string(state[i].position.y),
+                  std::to_string(state[i].position.z));
     }
 }
 
@@ -254,6 +266,9 @@ int main(int argc, char **argv) {
             advance(state, 0.01);
         }
         std::cout << energy(state) << std::endl;
+        double end_time = clock()
+        double time_taken = end_time - start_time
+        printf("Time taken: %.2fs\n", time_taken/CLOCKS_PER_SEC);
         return EXIT_SUCCESS;
     }
 }
